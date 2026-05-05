@@ -96,7 +96,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🧬 Ramachandran Plot Generator")
+st.title("Ramachandran Plot Generator")
 st.markdown("Generate RAMPAGE-style Ramachandran plots by entering a PDB ID or uploading a structure file.")
 
 # ─────────────────────────────────────────────

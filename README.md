@@ -1,4 +1,4 @@
-# 🧬 Ramachandran Plot Generator
+#  Ramachandran Plot Generator
 
 A premium, high-precision web application for generating RAMPAGE-style Ramachandran plots. This tool analyzes protein structures to visualize the backbone dihedral angles (φ and ψ) and provides a statistical breakdown of residue distributions based on high-resolution data.
 
