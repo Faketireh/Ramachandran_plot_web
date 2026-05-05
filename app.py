@@ -16,36 +16,83 @@ import urllib.error
 # ─────────────────────────────────────────────
 st.set_page_config(
     page_title="Ramachandran Plot Generator",
-    page_icon="🧬",
     layout="wide"
 )
 
-# Custom CSS for a premium feel
+# Custom CSS for a clean, premium Antigravity-inspired look
 st.markdown("""
     <style>
-    .main {
-        background-color: #f8f9fa;
+    /* Clean white background */
+    .stApp {
+        background-color: #ffffff;
+        color: #1a1a1a;
     }
+    
+    /* Sidebar styling: subtle background and vertical centering */
+    [data-testid="stSidebar"] {
+        background-color: #f8f9fa;
+        border-right: 1px solid #e9ecef;
+    }
+    [data-testid="stSidebar"] > div:first-child {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        padding: 2rem;
+    }
+
+    /* Modern button styling with subtle blue accent */
     .stButton>button {
         width: 100%;
-        border-radius: 5px;
-        height: 3em;
-        background-color: #4682B4;
+        border-radius: 6px;
+        height: 3.2em;
+        background-color: #0066ff;
         color: white;
+        border: none;
+        font-weight: 500;
+        transition: background-color 0.2s;
     }
+    .stButton>button:hover {
+        background-color: #0052cc;
+    }
+    
     .stDownloadButton>button {
         width: 100%;
-        border-radius: 5px;
-        height: 3em;
-        background-color: #2e7d32;
+        border-radius: 6px;
+        height: 3.2em;
+        background-color: #2da44e;
         color: white;
+        border: none;
+        font-weight: 500;
     }
-    .reportview-container .main .block-container {
-        padding-top: 2rem;
+
+    /* Heading typography */
+    h1, h2, h3 {
+        color: #0f172a !important;
+        font-weight: 600 !important;
     }
-    h1 {
-        color: #1e3d59;
+    
+    /* Statistics cards with subtle shadows */
+    .stMetric {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
+    
+    /* Contact info styling */
+    .contact-info {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+    .contact-info b { color: #0066ff; }
+    .contact-info a { text-decoration: none; color: inherit; }
+    .contact-info a:hover { color: #0066ff; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -60,19 +107,19 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rama500_dat
 RAMA_PREFS = {
     "General": {
         "file": "rama500-general.data",
-        "cmap": colors.ListedColormap(['#FFFFFF', '#F5DEB3', '#4682B4']),
+        "cmap": colors.ListedColormap(['#FFFFFF', '#F1F5F9', '#3B82F6']),
     },
     "GLY": {
         "file": "rama500-gly-sym.data",
-        "cmap": colors.ListedColormap(['#FFFFFF', '#F5DEB3', '#87CEEB']),
+        "cmap": colors.ListedColormap(['#FFFFFF', '#F1F5F9', '#60A5FA']),
     },
     "PRO": {
         "file": "rama500-pro.data",
-        "cmap": colors.ListedColormap(['#FFFFFF', '#F5DEB3', '#4682B4']),
+        "cmap": colors.ListedColormap(['#FFFFFF', '#F1F5F9', '#3B82F6']),
     },
     "PRE-PRO": {
         "file": "rama500-prepro.data",
-        "cmap": colors.ListedColormap(['#FFFFFF', '#F5DEB3', '#4682B4']),
+        "cmap": colors.ListedColormap(['#FFFFFF', '#F1F5F9', '#3B82F6']),
     },
 }
 
@@ -136,6 +183,15 @@ with st.sidebar:
             pdb_file_content = uploaded_file.read().decode('utf-8')
             pdb_id = uploaded_file.name.split('.')[0].upper()
             st.success(f"Uploaded {uploaded_file.name}")
+
+    # Branding / Contact Info
+    st.markdown(f"""
+        <div class="contact-info">
+            Protein Analysis Project<br>
+            By <b>Tirth Patel</b><br>
+            <a href="mailto:tirthtirth10@gmail.com">tirthtirth10@gmail.com</a>
+        </div>
+    """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 #  CORE LOGIC
@@ -225,7 +281,11 @@ if pdb_file_content and rama_values:
         with col1:
             # Plotting
             fig, ax = plt.subplots(figsize=(8, 8), facecolor='white')
+            ax.set_facecolor('white')
             
+            # Text and label colors for light mode
+            label_color = '#1e293b'
+            grid_color = '#e2e8f0'
             def make_region_grid(aa_type):
                 grid = rama_values[aa_type]
                 region = np.zeros_like(grid, dtype=np.int8)
@@ -245,16 +305,16 @@ if pdb_file_content and rama_values:
 
             # Grid lines
             for v in range(-180, 181, 45):
-                ax.axhline(v, color='#777777', lw=0.5, ls='--', zorder=2)
-                ax.axvline(v, color='#777777', lw=0.5, ls='--', zorder=2)
-            ax.axhline(0, color='#333333', lw=1.0, zorder=2)
-            ax.axvline(0, color='#333333', lw=1.0, zorder=2)
+                ax.axhline(v, color=grid_color, lw=0.5, ls='--', zorder=2)
+                ax.axvline(v, color=grid_color, lw=0.5, ls='--', zorder=2)
+            ax.axhline(0, color='#94a3b8', lw=1.0, zorder=2)
+            ax.axvline(0, color='#94a3b8', lw=1.0, zorder=2)
 
             # Scatter
-            ax.scatter(buckets["fav"]["gen"]["x"], buckets["fav"]["gen"]["y"], marker='s', s=14, color='#111111', alpha=0.85, zorder=5)
-            ax.scatter(buckets["fav"]["gly"]["x"], buckets["fav"]["gly"]["y"], marker='s', s=14, color='#cc6600', alpha=0.85, zorder=5)
-            ax.scatter(buckets["allowed"]["gen"]["x"], buckets["allowed"]["gen"]["y"], marker='^', s=16, color='#111111', alpha=0.75, zorder=5)
-            ax.scatter(buckets["allowed"]["gly"]["x"], buckets["allowed"]["gly"]["y"], marker='^', s=16, color='#cc6600', alpha=0.75, zorder=5)
+            ax.scatter(buckets["fav"]["gen"]["x"], buckets["fav"]["gen"]["y"], marker='s', s=14, color='#1e293b', alpha=0.8, zorder=5)
+            ax.scatter(buckets["fav"]["gly"]["x"], buckets["fav"]["gly"]["y"], marker='s', s=14, color='#ea580c', alpha=0.8, zorder=5)
+            ax.scatter(buckets["allowed"]["gen"]["x"], buckets["allowed"]["gen"]["y"], marker='^', s=16, color='#475569', alpha=0.6, zorder=5)
+            ax.scatter(buckets["allowed"]["gly"]["x"], buckets["allowed"]["gly"]["y"], marker='^', s=16, color='#f97316', alpha=0.6, zorder=5)
 
             for sub in ["gen", "gly"]:
                 for xv, yv, lbl in zip(buckets["outlier"][sub]["x"], buckets["outlier"][sub]["y"], buckets["outlier"][sub]["lbl"]):
@@ -263,9 +323,13 @@ if pdb_file_content and rama_values:
 
             ax.set_xlim(-180, 180)
             ax.set_ylim(-180, 180)
-            ax.set_xlabel("φ (degrees)")
-            ax.set_ylabel("ψ (degrees)")
-            ax.set_title(f"Ramachandran Plot - {pdb_id}", fontweight='bold')
+            ax.set_xlabel("φ (degrees)", color=label_color)
+            ax.set_ylabel("ψ (degrees)", color=label_color)
+            ax.tick_params(axis='both', colors=label_color)
+            for spine in ax.spines.values():
+                spine.set_edgecolor(label_color)
+                
+            ax.set_title(f"Ramachandran Plot - {pdb_id}", color=label_color, fontweight='bold', pad=15)
             
             st.pyplot(fig)
 
